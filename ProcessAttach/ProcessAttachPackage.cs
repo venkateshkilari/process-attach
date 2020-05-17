@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using EnvDTE;
+using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using Task = System.Threading.Tasks.Task;
 
@@ -33,6 +35,7 @@ namespace ProcessAttach
         /// ProcessAttachPackage GUID string.
         /// </summary>
         public const string PackageGuidString = "1199641e-bf7d-4438-b144-f43200a6dd0b";
+        public static DTE2 DTE;
 
         #region Package Members
 
@@ -48,6 +51,8 @@ namespace ProcessAttach
             // When initialized asynchronously, the current thread may be a background thread at this point.
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+
+            DTE = (EnvDTE80.DTE2)await GetServiceAsync(typeof(EnvDTE.DTE));
             await ProcessAttachWindowCommand.InitializeAsync(this);
         }
 
